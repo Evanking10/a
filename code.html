@@ -8,22 +8,22 @@
 <body>
     <h1>Click Speed Controller</h1>
     <label for="speed">Set Click Speed (ms): </label>
-    <input type="range" id="speed" min="1" max="1000" value="100">
+    <input type="range" id="speed" min="10" max="1000" value="100">
     <span id="speedValue">100</span> ms
 
     <script>
         const speedInput = document.getElementById('speed');
         const speedValue = document.getElementById('speedValue');
-        let clickSpeed = parseInt(speedInput.value, 100);
+        let clickSpeed = parseInt(speedInput.value, 10);
 
         // Update displayed speed value
         speedInput.addEventListener('input', function() {
-            clickSpeed = parseInt(speedInput.value, 100);
+            clickSpeed = parseInt(speedInput.value, 10);
             speedValue.textContent = clickSpeed;
         });
 
         document.addEventListener('click', function(event) {
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 10; i++) {
                 setTimeout(() => {
                     const simulatedClick = new MouseEvent('click', {
                         bubbles: true,
@@ -34,7 +34,7 @@
                     event.target.dispatchEvent(simulatedClick);
                 }, i * clickSpeed); // Delay each click based on the speed
             }
-            console.log('Simulated 100 rapid clicks at:', event.clientX, event.clientY, 'with speed:', clickSpeed, 'ms');
+            console.log('Simulated 10 rapid clicks at:', event.clientX, event.clientY, 'with speed:', clickSpeed, 'ms');
         });
     </script>
 </body>
