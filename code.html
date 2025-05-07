@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scratch Click Speed Controller</title>
+    <title>Click Speed Controller with Bubble Effect</title>
     <style>
         body {
             margin: 0;
@@ -40,7 +40,9 @@
     </style>
 </head>
 <body>
-    <h1>Scratch Click Speed Controller</h1>
+    <h1>Click Speed Controller by Tanegrine_Evan</h1>
+    <h2>Click anywhere to simulate rapid clicks!</h2>
+    <h3>check out my youtube @Tanegrine_Evan</h3>
     <label for="speed">Set Click Speed (ms): </label>
     <input type="range" id="speed" min="10" max="1000" value="100">
     <span id="speedValue">100</span> ms
@@ -48,7 +50,7 @@
     <br>
 
     <label for="clicks">Set Number of Clicks: </label>
-    <input type="range" id="clicks" min="1" max="100" value="10">
+    <input type="range" id="clicks" min="1" max="20" value="10">
     <span id="clicksValue">10</span> clicks
 
     <script>
@@ -73,13 +75,6 @@
         });
 
         document.addEventListener('click', function(event) {
-            // Locate the Scratch canvas
-            const scratchCanvas = document.querySelector('canvas'); // Adjust selector if needed
-            if (!scratchCanvas) {
-                console.error('Scratch canvas not found!');
-                return;
-            }
-
             for (let i = 0; i < numberOfClicks; i++) {
                 setTimeout(() => {
                     // Create a bubble effect
@@ -96,26 +91,17 @@
                         bubble.remove();
                     });
 
-                    // Simulate a click on the Scratch canvas
-                    const rect = scratchCanvas.getBoundingClientRect();
-                    const simulatedEvent = new MouseEvent('mousedown', {
+                    // Simulate a click
+                    const simulatedClick = new MouseEvent('click', {
                         bubbles: true,
                         cancelable: true,
-                        clientX: rect.left + (event.clientX - rect.left),
-                        clientY: rect.top + (event.clientY - rect.top)
+                        clientX: event.clientX,
+                        clientY: event.clientY
                     });
-                    scratchCanvas.dispatchEvent(simulatedEvent);
-
-                    const simulatedMouseUp = new MouseEvent('mouseup', {
-                        bubbles: true,
-                        cancelable: true,
-                        clientX: rect.left + (event.clientX - rect.left),
-                        clientY: rect.top + (event.clientY - rect.top)
-                    });
-                    scratchCanvas.dispatchEvent(simulatedMouseUp);
+                    event.target.dispatchEvent(simulatedClick);
                 }, i * clickSpeed); // Delay each click based on the speed
             }
-            console.log(`Simulated ${numberOfClicks} clicks on Scratch canvas with speed: ${clickSpeed} ms`);
+            console.log(`Simulated ${numberOfClicks} rapid clicks at:`, event.clientX, event.clientY, 'with speed:', clickSpeed, 'ms');
         });
     </script>
 </body>
