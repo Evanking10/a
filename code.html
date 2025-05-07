@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click Speed Controller with Bubble Effect</title>
+    <title>Scratch Click Speed Controller</title>
     <style>
         body {
             margin: 0;
@@ -12,6 +12,7 @@
             background: #282c34;
             color: white;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
@@ -39,15 +40,25 @@
     </style>
 </head>
 <body>
-    <h1>Click Speed Controller</h1>
+    <h1>Scratch Click Speed Controller</h1>
     <label for="speed">Set Click Speed (ms): </label>
     <input type="range" id="speed" min="10" max="1000" value="100">
     <span id="speedValue">100</span> ms
 
+    <br>
+
+    <label for="clicks">Set Number of Clicks: </label>
+    <input type="range" id="clicks" min="1" max="100" value="10">
+    <span id="clicksValue">10</span> clicks
+
     <script>
         const speedInput = document.getElementById('speed');
         const speedValue = document.getElementById('speedValue');
+        const clicksInput = document.getElementById('clicks');
+        const clicksValue = document.getElementById('clicksValue');
+
         let clickSpeed = parseInt(speedInput.value, 10);
+        let numberOfClicks = parseInt(clicksInput.value, 10);
 
         // Update displayed speed value
         speedInput.addEventListener('input', function() {
@@ -55,8 +66,21 @@
             speedValue.textContent = clickSpeed;
         });
 
+        // Update displayed number of clicks
+        clicksInput.addEventListener('input', function() {
+            numberOfClicks = parseInt(clicksInput.value, 10);
+            clicksValue.textContent = numberOfClicks;
+        });
+
         document.addEventListener('click', function(event) {
-            for (let i = 0; i < 10; i++) {
+            // Locate the Scratch canvas
+            const scratchCanvas = document.querySelector('canvas'); // Adjust selector if needed
+            if (!scratchCanvas) {
+                console.error('Scratch canvas not found!');
+                return;
+            }
+
+            for (let i = 0; i < numberOfClicks; i++) {
                 setTimeout(() => {
                     // Create a bubble effect
                     const bubble = document.createElement('div');
@@ -72,17 +96,26 @@
                         bubble.remove();
                     });
 
-                    // Simulate a click
-                    const simulatedClick = new MouseEvent('click', {
+                    // Simulate a click on the Scratch canvas
+                    const rect = scratchCanvas.getBoundingClientRect();
+                    const simulatedEvent = new MouseEvent('mousedown', {
                         bubbles: true,
                         cancelable: true,
-                        clientX: event.clientX,
-                        clientY: event.clientY
+                        clientX: rect.left + (event.clientX - rect.left),
+                        clientY: rect.top + (event.clientY - rect.top)
                     });
-                    event.target.dispatchEvent(simulatedClick);
+                    scratchCanvas.dispatchEvent(simulatedEvent);
+
+                    const simulatedMouseUp = new MouseEvent('mouseup', {
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: rect.left + (event.clientX - rect.left),
+                        clientY: rect.top + (event.clientY - rect.top)
+                    });
+                    scratchCanvas.dispatchEvent(simulatedMouseUp);
                 }, i * clickSpeed); // Delay each click based on the speed
             }
-            console.log('Simulated 10 rapid clicks at:', event.clientX, event.clientY, 'with speed:', clickSpeed, 'ms');
+            console.log(`Simulated ${numberOfClicks} clicks on Scratch canvas with speed: ${clickSpeed} ms`);
         });
     </script>
 </body>
