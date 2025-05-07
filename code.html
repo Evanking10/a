@@ -3,7 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click Speed Controller</title>
+    <title>Click Speed Controller with Bubble Effect</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            background: #282c34;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bubble {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bubble-animation 1s ease-out forwards;
+        }
+
+        @keyframes bubble-animation {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
     <h1>Click Speed Controller</h1>
@@ -25,6 +58,21 @@
         document.addEventListener('click', function(event) {
             for (let i = 0; i < 10; i++) {
                 setTimeout(() => {
+                    // Create a bubble effect
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('bubble');
+                    document.body.appendChild(bubble);
+
+                    // Set the bubble's position to the click location
+                    bubble.style.left = `${event.clientX}px`;
+                    bubble.style.top = `${event.clientY}px`;
+
+                    // Remove the bubble after the animation ends
+                    bubble.addEventListener('animationend', () => {
+                        bubble.remove();
+                    });
+
+                    // Simulate a click
                     const simulatedClick = new MouseEvent('click', {
                         bubbles: true,
                         cancelable: true,
