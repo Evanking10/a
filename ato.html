@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auto Clicker</title>
+  <style>
+    #autoClickerBtn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <button id="autoClickerBtn">Start Auto Clicker</button>
+  <script>
+    let autoClicking = false;
+    let intervalId = null;
+    let clickX = 0, clickY = 0;
+
+    document.getElementById('autoClickerBtn').onclick = function() {
+      autoClicking = !autoClicking;
+      this.textContent = autoClicking ? 'Stop Auto Clicker' : 'Start Auto Clicker';
+      if (!autoClicking && intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    };
+
+    document.addEventListener('click', function(e) {
+      if (e.target.id === 'autoClickerBtn') return;
+      if (autoClicking) {
+        clickX = e.clientX;
+        clickY = e.clientY;
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(() => {
+          const el = document.elementFromPoint(clickX, clickY);
+          if (el) el.click();
+        }, 100); // Click every 100ms
+      }
+    });
+  </script>
+</body>
+</html>
